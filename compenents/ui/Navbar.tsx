@@ -24,13 +24,17 @@ export const Navbar = ({  }) => {
                 priority={true}
             />
             <NextLink href="/" passHref>
+                <Link>
                     <Text color="white" h2>P</Text>
-                    <Text color="white" h3>okémon</Text>
+                    <Text color="white" h3>okémon!</Text>
+                </Link>
             </NextLink>
 
             <Spacer css={{ flex: 1 }}/>
             <NextLink href="/favorites">
+                <Link>
                     <Text color="white" h3>Favoritos</Text>
+                </Link>
             </NextLink>
             
         </Container>
