@@ -12,6 +12,9 @@ export const pokemonInfo = async ( nameOrId: string ) => {
         id: data.id,
         name: data.name,
         sprites: data.sprites,
+        abilities: data.abilities,
+        weight: data.weight,
+        moves: data.moves,
       }
       
     } catch (error) {

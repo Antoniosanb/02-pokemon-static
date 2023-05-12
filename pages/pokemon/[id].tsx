@@ -15,6 +15,12 @@ interface Props {
 
 const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 
+    const [page, setPage] = useState(false)
+
+    const handleChange = () => {
+        !page ? setPage(true) : setPage(false)
+    }
+
     const [isInFavorires, setIsInFavorires] = useState((localFavorites.existFavorites(pokemon.id)))
 
     const onToggleFavorites = () => {
@@ -91,6 +97,39 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                                     height={100}
                                 />
                             </Container>
+                            <div style={{display: 'flex'}}>
+                        <div><Text size={30} style={{fontWeight: 'bold'}}>Abilities:</Text>
+                        <ul>
+                        {pokemon.abilities.map((ability) => {
+                            return <li style={{fontSize: '20px'}}>{ability.ability.name}</li>
+                        })}
+                      </ul></div>
+                        <Text size={30} style={{marginLeft: '50px', fontWeight: 'bold'}}>Weight : </Text>
+                        <Text style={{marginLeft: '10px', fontSize: '20px', paddingTop: '0.8%'}}>{pokemon.weight}</Text>
+                        <Text size={30} style={{fontWeight: 'bold', marginLeft: '50px'}}>Moves:</Text>
+                      <div style={{display: 'flex'}}>
+                        <ul>
+                            {pokemon.moves.map((move, i) => {
+                                if (i >= 0 && i <= 4) {
+                                    return (
+                                        <li>{move.move.name}</li>
+                                    )
+                                } if (page == true) {
+                                    if (i >= 5) {
+                                        return (
+                                            <li>{move.move.name}</li>
+                                        )
+                                    }
+                                }
+                            })}
+                        </ul>
+                        {pokemon.moves.length > 5 ?
+                            <Button size="xs"color='gradient' style={{marginTop: '20%', marginLeft: '25px'}} onClick={handleChange}>
+                                {!page ? 'Show More Moves...' : 'Show less Moves...'}
+                            </Button> : false}
+                        
+                      </div>
+                      </div>
                         </Card.Body>
                     </Card>
                 </Grid>

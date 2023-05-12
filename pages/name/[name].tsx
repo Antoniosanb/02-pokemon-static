@@ -1,13 +1,11 @@
-import { Button, Card, Container, Grid, Text } from "@nextui-org/react";
+import { Button, Card, Container, Grid, Text, Pagination } from "@nextui-org/react";
 import confetti from "canvas-confetti";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next"
-import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { pokeApi, pokeApiName } from "../../api";
 import { Layout } from "../../compenents/layouts";
-import { Pokemon, PokemonListResponse, SmallPokemons } from "../../interfaces";
+import { Pokemon, PokemonListResponse, SmallPokemons, Type } from "../../interfaces";
 import { localFavorites, pokemonInfo } from "../../utils";
 
 interface Props {
@@ -15,6 +13,12 @@ interface Props {
 }
 
 const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
+    
+    const [page, setPage] = useState(false)
+
+    const handleChange = () => {
+        !page ? setPage(true) : setPage(false)
+    }
 
   const [isInFavorires, setIsInFavorires] = useState(localFavorites.existFavorites(pokemon.id))
 
@@ -44,9 +48,9 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
                   <Card.Body>
                       <Card.Image
                           src={pokemon.sprites.other?.dream_world.front_default || '/no-image.png'}
-                          alt='balbosaur'
+                          alt={pokemon.name}
                           width="100%"
-                          height={200}
+                          height={400}
                       />
                   </Card.Body>
               </Card>
@@ -70,28 +74,64 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
                           <Image 
                               src={pokemon.sprites.front_default}
                               alt={pokemon.name}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
                           />
                           <Image 
                               src={pokemon.sprites.back_default}
                               alt={pokemon.name}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
+                              style={{marginLeft: '50px'}}
                           />
                           <Image 
                               src={pokemon.sprites.front_shiny}
                               alt={pokemon.name}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
+                              style={{marginLeft: '50px'}}
                           />
                           <Image 
                               src={pokemon.sprites.back_shiny}
                               alt={pokemon.name}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
+                              style={{marginLeft: '50px'}}
                           />
                       </Container>
+                      <div style={{display: 'flex'}}>
+                        <div><Text size={30} style={{fontWeight: 'bold'}}>Abilities:</Text>
+                        <ul>
+                        {pokemon.abilities.map((ability) => {
+                            return <li style={{fontSize: '20px'}}>{ability.ability.name}</li>
+                        })}
+                      </ul></div>
+                        <Text size={30} style={{marginLeft: '50px', fontWeight: 'bold'}}>Weight : </Text>
+                        <Text style={{marginLeft: '10px', fontSize: '20px', paddingTop: '0.8%'}}>{pokemon.weight}</Text>
+                        <Text size={30} style={{fontWeight: 'bold', marginLeft: '50px'}}>Moves:</Text>
+                      <div style={{display: 'flex'}}>
+                        <ul>
+                            {pokemon.moves.map((move, i) => {
+                                if (i >= 0 && i <= 4) {
+                                    return (
+                                        <li>{move.move.name}</li>
+                                    )
+                                } if (page == true) {
+                                    if (i >= 5) {
+                                        return (
+                                            <li>{move.move.name}</li>
+                                        )
+                                    }
+                                }
+                            })}
+                        </ul>
+                        {pokemon.moves.length > 5 ?
+                            <Button size="xs"color='gradient' style={{marginTop: '20%', marginLeft: '25px'}} onClick={handleChange}>
+                                {!page ? 'Show More Moves...' : 'Show less Moves...'}
+                            </Button> : false}
+                        
+                      </div>
+                      </div>
                   </Card.Body>
               </Card>
           </Grid>
@@ -138,3 +178,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export default PokemonByNamePage
+
